@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Jay Bhutnath Agri Supplier</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2e6;--surf:#fbfcf7;--ink:#17301f;--mute:#5d6f5f;--line:#d3dcc4;--g:#1f5a37;--gold:#c8901a;--gold2:#f0c35a;--bad:#a8362b;--ok:#2a7d46;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0d2217;--surf:#14301f;--ink:#f1f0dd;--mute:#a4b8a3;--line:#27472f;--g:#4fae78;--gold:#e8b445;--gold2:#ffd77a;--bad:#ff8a7a;--ok:#78d79b}}
+:root[data-theme="dark"]{--bg:#0d2217;--surf:#14301f;--ink:#f1f0dd;--mute:#a4b8a3;--line:#27472f;--g:#4fae78;--gold:#e8b445;--gold2:#ffd77a;--bad:#ff8a7a;--ok:#78d79b}
+*{box-sizing:border-box}html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 'DM Sans',system-ui,sans-serif;min-height:100vh}
+h1,h2,h3{font-family:'Bricolage Grotesque','DM Sans',sans-serif;margin:0;line-height:1.1}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;border:0;border-radius:10px;padding:.6em 1.1em;background:var(--g);color:#fff;font-weight:700;transition:transform .15s}
+button:hover{transform:translateY(-1px)}button.alt{background:transparent;color:var(--ink);border:1.5px solid var(--line)}button.gold{background:var(--gold2);color:#2b2108}button.bad{background:var(--bad);color:#fff}
+button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{outline:3px solid var(--gold);outline-offset:2px}
+input,select,textarea{width:100%;padding:.65em .8em;border-radius:10px;border:1.5px solid var(--line);background:var(--surf)}
+label{font-size:.85rem;color:var(--mute);display:block;margin:.8rem 0 .25rem}
+/* login */
+#login{min-height:100vh;display:grid;place-items:center;padding:24px;position:relative;overflow:hidden;background:radial-gradient(1000px 600px at 20% 10%,#2c7a4b55,transparent),radial-gradient(800px 500px at 90% 90%,#e8b44533,transparent),#0d2217;perspective:1400px;color:#f1f0dd}
+#cubes{position:absolute;inset:0;transform-style:preserve-3d;pointer-events:none}
+.cube{position:absolute;width:var(--s);height:var(--s);transform-style:preserve-3d;animation:spin var(--t) linear infinite,bob 6s ease-in-out infinite alternate}
+.cube i{position:absolute;inset:0;border:1px solid #f0c35a99;background:linear-gradient(135deg,#f0c35a55,#c8901a22);backdrop-filter:blur(2px)}
+.cube i:nth-child(1){transform:translateZ(calc(var(--s)/2))}.cube i:nth-child(2){transform:rotateY(180deg) translateZ(calc(var(--s)/2))}.cube i:nth-child(3){transform:rotateY(90deg) translateZ(calc(var(--s)/2))}.cube i:nth-child(4){transform:rotateY(-90deg) translateZ(calc(var(--s)/2))}.cube i:nth-child(5){transform:rotateX(90deg) translateZ(calc(var(--s)/2))}.cube i:nth-child(6){transform:rotateX(-90deg) translateZ(calc(var(--s)/2))}
+@keyframes spin{to{transform:rotateX(360deg) rotateY(360deg)}}@keyframes bob{to{margin-top:-30px}}
+#tilt{width:min(440px,100%);transform-style:preserve-3d;transition:transform .12s ease-out;position:relative}
+.lcard{background:linear-gradient(160deg,#17382470,#0f261a99);border:1px solid #f0c35a55;border-radius:24px;padding:30px;backdrop-filter:blur(14px);box-shadow:0 40px 80px #0009,inset 0 1px 0 #fff3;transform-style:preserve-3d}
+.lcard .brand{transform:translateZ(60px)}.lcard .fields{transform:translateZ(30px)}.lcard .go{transform:translateZ(50px);width:100%;margin-top:1.2rem;padding:.85em}
+.lcard input,.lcard select{background:#0d221799;border-color:#f0c35a44;color:#f1f0dd}.lcard label{color:#b9c9b6}
+.brand h1{font-size:2rem;color:var(--gold2)}.brand p{margin:.3rem 0 1rem;color:#b9c9b6;font-size:.9rem}
+.roles{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;transform:translateZ(40px)}
+.roles button{background:#ffffff12;color:#f1f0dd;padding:.55em .2em;font-size:.78rem;border:1px solid #f0c35a33}.roles button.on{background:var(--gold2);color:#2b2108}
+.msg{margin-top:.9rem;font-size:.9rem;min-height:1.2em;color:#ffd0c8}.msg.ok{color:#b8f0c8}
+.link{background:none;color:var(--gold2);padding:0;text-decoration:underline;font-weight:500}
+/* app */
+header.top{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:14px 22px;background:var(--surf);border-bottom:1px solid var(--line)}
+header.top h2{font-size:1.25rem;flex:1;color:var(--g)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);background:var(--surf);z-index:10}
+main{max-width:1100px;margin:0 auto;padding:22px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}.tabs button{background:var(--surf);color:var(--ink);border:1.5px solid var(--line)}.tabs button.on{background:var(--g);color:#fff;border-color:var(--g)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.card{background:var(--surf);border:1px solid var(--line);border-radius:16px;padding:18px}
+.pc .em{font-size:2.4rem}.pc h3{font-size:1.1rem;margin:.4rem 0 .2rem}.price{font-weight:800;color:var(--g);font-size:1.25rem}
+.pill{display:inline-block;padding:.15em .7em;border-radius:99px;font-size:.78rem;font-weight:700;background:var(--line);color:var(--ink)}
+.pill.pending{background:#f0c35a;color:#2b2108}.pill.approved,.pill.Delivered{background:var(--ok);color:#fff}.pill.rejected,.pill.Cancelled{background:var(--bad);color:#fff}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}.row>*{flex:0 0 auto}.sp{flex:1!important}
+.wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:560px}th,td{padding:.6em .7em;text-align:left;border-bottom:1px solid var(--line);vertical-align:middle}th{font-size:.82rem;color:var(--mute)}
+.steps{display:flex;gap:4px;margin:.8rem 0}.steps span{flex:1;height:6px;border-radius:4px;background:var(--line)}.steps span.d{background:var(--gold)}
+.otp{font:800 1.6rem 'Bricolage Grotesque',sans-serif;letter-spacing:.3em;color:var(--gold);background:var(--bg);padding:.2em .6em;border-radius:10px;display:inline-block}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:14px;margin-bottom:22px}.stats b{display:block;font:800 1.9rem 'Bricolage Grotesque',sans-serif;color:var(--g)}
+.hero{background:linear-gradient(120deg,var(--g),#123a24);color:#f1f0dd;border-radius:20px;padding:28px;margin-bottom:22px}.hero h2{font-size:1.8rem}.hero p{margin:.4rem 0 0;color:#cfe0cc}
+.wait{max-width:520px;margin:60px auto;text-align:center}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:.7em 1.2em;border-radius:12px;z-index:20}
+body{background:radial-gradient(900px 500px at 8% -8%,#2c7a4b44,transparent),radial-gradient(700px 500px at 100% 100%,#e8b44533,transparent),var(--bg) fixed}
+#bg3d{position:fixed;inset:0;perspective:1000px;pointer-events:none;overflow:hidden;z-index:0}#bg3d .cube{opacity:.4}
+main{position:relative;z-index:1}
+header.top{background:color-mix(in srgb,var(--surf) 78%,transparent);backdrop-filter:blur(14px)}
+.card{background:linear-gradient(160deg,var(--surf),color-mix(in srgb,var(--surf) 88%,var(--gold2)));box-shadow:inset 0 1px 0 #fff7,0 2px 0 var(--line),0 22px 30px -20px #06201266;transform-style:preserve-3d;transition:transform .18s ease-out,box-shadow .2s}
+.t3:hover{box-shadow:inset 0 1px 0 #fff7,0 2px 0 var(--line),0 36px 44px -22px #06201299}
+.hero{position:relative;padding-right:150px;transform-style:preserve-3d;box-shadow:0 28px 40px -24px #06201299,inset 0 1px 0 #fff3;transition:transform .18s ease-out}
+.hw{position:absolute;right:46px;top:50%;margin-top:-36px;width:72px;height:72px;perspective:600px}
+.hc{width:72px;height:72px;transform-style:preserve-3d;animation:spin 16s linear infinite}
+.hc i{position:absolute;inset:0;display:grid;place-items:center;font-size:30px;font-style:normal;border:1px solid #f0c35aaa;background:linear-gradient(135deg,#f0c35a66,#c8901a33)}
+.hc i:nth-child(1){transform:translateZ(36px)}.hc i:nth-child(2){transform:rotateY(180deg) translateZ(36px)}.hc i:nth-child(3){transform:rotateY(90deg) translateZ(36px)}.hc i:nth-child(4){transform:rotateY(-90deg) translateZ(36px)}.hc i:nth-child(5){transform:rotateX(90deg) translateZ(36px)}.hc i:nth-child(6){transform:rotateX(-90deg) translateZ(36px)}
+.pc .em{display:inline-block;transform:translateZ(46px);filter:drop-shadow(0 12px 8px #0004);animation:fl 3.6s ease-in-out infinite alternate}@keyframes fl{to{transform:translateZ(60px) translateY(-6px) rotate(6deg)}}
+.pc h3,.pc .price{transform:translateZ(22px)}
+.stats b{transform:translateZ(24px)}
+.otp{text-shadow:0 1px 0 #fff5,0 3px 0 #0002;box-shadow:inset 0 2px 6px #0003}
+button:not(.alt):not(.link){box-shadow:0 4px 0 #0003,0 10px 16px -8px #0005}
+button:not(.alt):not(.link):active{transform:translateY(3px);box-shadow:0 1px 0 #0003}
+.tabs button.on{box-shadow:0 5px 0 #0003,0 12px 18px -8px #0006}
+@media (max-width:600px){.hw{display:none}.hero{padding-right:28px}}
+.card{transform-style:flat}.card .row{position:relative;z-index:3}
+.pc h3,.pc .price,.stats b{transform:none}
+.pc .em{transform:none;pointer-events:none;animation:fl2 3.6s ease-in-out infinite alternate}@keyframes fl2{to{transform:translateY(-6px) rotate(6deg)}}
+body.driver{--bg:#0f1b2d;--surf:#17263d;--ink:#eef3fb;--mute:#97a8c2;--line:#2b3f5e;--g:#ff9f1c;--gold:#ffb703;--gold2:#ffd166;--ok:#4ade80;--bad:#ff7b6b;background:repeating-linear-gradient(135deg,#0f1b2d 0 22px,#101f34 22px 44px)}
+.driver #bg3d{display:none}.driver header.top{background:#0a1424;border-color:#2b3f5e}.driver header.top h2{color:var(--gold2)}.driver button{color:#1a1200}.driver button.alt{color:var(--ink)}.driver .tabs button.on{color:#1a1200}
+.driver .card{background:var(--surf);border-radius:20px;box-shadow:0 8px 0 #0a1424}.driver main{max-width:560px}
+.dbar{display:grid;grid-template-columns:2fr 1fr 1fr 1.5fr;gap:8px;background:#0a1424;border:1px solid var(--line);border-radius:18px;padding:14px;margin-bottom:16px}.dbar b{display:block;font:800 1.1rem 'Bricolage Grotesque',sans-serif;color:var(--gold2)}.dbar small{color:var(--mute)}
+.dtabs button{flex:1;padding:.9em .4em}.dstep{display:flex;justify-content:space-between;font-size:.72rem;color:var(--mute)}
+a.btn{display:inline-block;text-align:center;text-decoration:none;border-radius:12px;padding:.7em 1.1em;font-weight:700;background:var(--gold2);color:#1a1200}.big{width:100%;padding:1em;font-size:1.05rem}
+@media (prefers-reduced-motion:reduce){.cube,.hc,.pc .em{animation:none}#tilt,.t3,.card,.hero{transition:none}}
+@media (max-width:520px){.roles{grid-template-columns:repeat(2,1fr)}.lcard{padding:22px}}
+</style></head><body>
+<div id="root"></div>
+<script>
+const ROLES={farmer:'Farmer',trader:'Trader',partner:'Delivery partner',admin:'Admin'};
+const STEPS=['Placed','Confirmed','Packed','Out for delivery','Delivered'];
+let tok='',me=null,role='farmer',mode='login',tab='',cart={},msg='',ok=false,P=[],O=[],U=[],PT=[],ST={},TR={},wid=null,lastPing=0,sig='';
+try{tok=localStorage.getItem('jbt')||''}catch(e){}
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const inr=n=>'₹'+Number(n).toLocaleString('en-IN');
+const ago=t=>{const s=Math.round((Date.now()-t)/1e3);return s<10?'just now':s<60?s+' s ago':s<3600?Math.round(s/60)+' min ago':Math.round(s/3600)+' h ago'};
+const em=p=>({'Castor Seed':'🫘'}[p.name]||{Grain:'🌾',Fertilizer:'🧪',Pesticide:'🌿'}[p.cat]||'📦');
+function toast(t){const d=document.createElement('div');d.className='toast';d.textContent=t;document.body.appendChild(d);setTimeout(()=>d.remove(),2600)}
+addEventListener('unhandledrejection',e=>{toast(e.reason&&e.reason.message||'Something went wrong');e.preventDefault()});
+const NOSRV='Cannot reach the backend. Start it with run-backend.bat, then open http://localhost:3000 in your browser (do not double-click index.html).';
+async function api(p,m='GET',b){if(location.protocol==='file:')throw new Error(NOSRV);
+ let r;try{r=await fetch('/api'+p,{method:m,headers:{'Content-Type':'application/json',...(tok?{Authorization:'Bearer '+tok}:{})},body:b?JSON.stringify(b):undefined})}catch(e){throw new Error(NOSRV)}
+ 
+ let j={};try{j=await r.json()}catch(e){}
+ if(!r.ok){if(r.status===401&&me)logout();throw Object.assign(new Error(j.error||'Request failed'),{data:j,status:r.status})}return j}
+function cubes(){let h='';for(let i=0;i<9;i++){const s=30+Math.random()*50;h+=`<div class="cube" style="--s:${s}px;--t:${14+Math.random()*16}s;left:${Math.random()*95}%;top:${Math.random()*90}%;animation-delay:-${Math.random()*10}s"><i></i><i></i><i></i><i></i><i></i><i></i></div>`}return h}
+const HC='<div class="hw"><div class="hc"><i>🌾</i><i>🧪</i><i>🌿</i><i>🫘</i><i>🌽</i><i>🧴</i></div></div>';
+const mapf=(l,h=170)=>l?`<iframe loading="lazy" title="Live map" style="width:100%;height:${h}px;border:0;border-radius:12px;margin-top:.6rem" src="https://www.openstreetmap.org/export/embed.html?bbox=${l.lng-.006}%2C${l.lat-.004}%2C${l.lng+.006}%2C${l.lat+.004}&layer=mapnik&marker=${l.lat}%2C${l.lng}"></iframe>`:'';
+function render(){
+ if(!me){document.body.className='';$('#root').innerHTML=loginView();bind();return}
+ const h=`<header class="top"><h2>🌾 Jay Bhutnath Agri Supplier</h2><span class="pill">${ROLES[me.role]} · ${esc(me.name)}</span><button class="alt" onclick="logout()">Log out</button></header><main>${me.role==='admin'?adminView():me.status!=='approved'?waitView():me.role==='partner'?partnerView():custView()}</main>`;
+ document.body.className=me.role==='partner'?'driver':'';$('#root').innerHTML='<div id="bg3d">'+cubes()+'</div>'+h;tilt3d()}
+function tilt3d(){if(matchMedia('(prefers-reduced-motion:reduce)').matches||document.body.classList.contains('driver'))return;
+ document.querySelectorAll('.grid .card,.stats .card,.hero,main>.card').forEach(el=>{el.classList.add('t3');
+  el.onmousemove=e=>{const r=el.getBoundingClientRect(),k=r.width>700?2:10,x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;el.style.transform=`perspective(900px) rotateY(${x*k}deg) rotateX(${-y*k}deg) translateZ(8px)`};
+  el.onmouseleave=()=>el.style.transform=''})}
+function loginView(){const reg=mode==='register'&&role!=='admin';
+ return `<div id="login"><div id="cubes">${cubes()}</div><div id="tilt"><div class="lcard">
+ <div class="brand"><h1>Jay Bhutnath<br>Agri Supplier</h1><p>Grain, castor, fertilizer and pesticide — delivered to your door.</p></div>
+ <div class="roles">${Object.keys(ROLES).map(r=>`<button class="${r===role?'on':''}" onclick="setRole('${r}')">${ROLES[r]}</button>`).join('')}</div>
+ <div class="fields">${reg?`<label>Full name</label><input id="n" autocomplete="name">`:''}
+ <label>${role==='admin'?'Username':'Mobile number'}</label><input id="u" autocomplete="username">
+ <label>Password</label><input id="p" type="password" autocomplete="current-password"></div>
+ <button class="gold go" onclick="${reg?'doReg()':'doLogin()'}">${reg?'Create account':'Log in'}</button>
+ <div class="msg ${ok?'ok':''}">${esc(msg)}</div>
+ ${role!=='admin'?`<div style="font-size:.9rem;color:#b9c9b6">${reg?'Already registered?':'New here?'} <button class="link" onclick="mode='${reg?'login':'register'}';msg='';render()">${reg?'Log in':'Register'}</button></div>`:''}
+ </div></div></div>`}
+function bind(){const t=$('#tilt'),l=$('#login');if(!t)return;
+ l.onmousemove=e=>{t.style.transform=`rotateY(${(e.clientX/innerWidth-.5)*22}deg) rotateX(${-(e.clientY/innerHeight-.5)*18}deg)`};
+ l.onmouseleave=()=>t.style.transform='';l.onkeydown=e=>{if(e.key==='Enter')$('.go').click()}}
+function setRole(r){role=r;mode='login';msg='';render()}
+async function doReg(){ok=false;try{const r=await api('/auth/register','POST',{role,name:$('#n').value,phone:$('#u').value.trim(),password:$('#p').value});mode='login';msg=r.message;ok=true}catch(e){msg=e.message}render()}
+async function doLogin(){ok=false;try{const r=await api('/auth/login','POST',{role,username:$('#u').value.trim(),password:$('#p').value});
+ tok=r.token;try{localStorage.setItem('jbt',tok)}catch(e){}me=r.user;tab=me.role==='partner'?'jobs':me.role==='admin'?'overview':'shop';msg='';await load()}catch(e){msg=e.message;render()}}
+function logout(){stopW();tok='';try{localStorage.removeItem('jbt')}catch(e){}me=null;cart={};msg='';render()}
+async function load(){if(me&&me.status==='approved'){
+ if(me.role==='admin'){const g=p=>api(p);const[u,o,p,pt,st]=await Promise.all([g('/admin/users'),g('/admin/orders'),g('/products'),g('/admin/partners'),g('/admin/stats')]);U=u.users;O=o.orders;P=p.products;PT=pt.partners;ST=st}
+ else if(me.role==='partner'){O=(await api('/partner/orders')).orders;if(me.duty)startW()}
+ else{const[p,o]=await Promise.all([api('/products'),api('/orders')]);P=p.products;O=o.orders}}
+ render()}
+async function recheck(){me=(await api('/me')).user;await load()}
+function waitView(){return `<div class="card wait"><h2>${me.status==='pending'?'Waiting for admin approval':'Access declined'}</h2><p>${me.status==='pending'?'The admin must approve your account before you can use the website. Check back soon.':'The admin did not approve this account. Please contact Jay Bhutnath Agri Supplier.'}</p><button onclick="recheck()">Check status</button></div>`}
+/* customer */
+function custView(){const n=Object.values(cart).reduce((a,b)=>a+b,0),my=O;
+ const tabs=`<div class="tabs"><button class="${tab==='shop'?'on':''}" onclick="tab='shop';render()">Shop</button><button class="${tab==='cart'?'on':''}" onclick="tab='cart';render()">Cart (${n})</button><button class="${tab==='orders'?'on':''}" onclick="tab='orders';render()">My orders (${my.length})</button></div>`;
+ const hero=`<div class="hero"><h2>Namaste, ${esc(me.name)}</h2><p>Fresh stock, fair prices and OTP-safe delivery.</p>${HC}</div>`;
+ if(tab==='shop')return hero+tabs+`<div class="grid">${P.map(p=>`<div class="card pc"><div class="em">${em(p)}</div><span class="pill">${p.cat}</span><h3>${esc(p.name)}</h3><div class="price">${inr(p.price)} <small style="font-weight:400;color:var(--mute)">/ ${esc(p.unit)}</small></div><div style="color:var(--mute);font-size:.85rem;margin:.3rem 0 .8rem">${p.stock>0?p.stock+' in stock':'Out of stock'}</div><div class="row"><input type="number" min="1" max="${p.stock}" value="1" id="q${p.id}" style="width:80px"><button ${p.stock<1?'disabled':''} onclick="addCart(${p.id})">Add to cart</button></div></div>`).join('')}</div>`;
+ if(tab==='cart'){const it=Object.entries(cart).map(([id,q])=>({p:P.find(x=>x.id==id),q})).filter(i=>i.p),tot=it.reduce((a,i)=>a+i.p.price*i.q,0);
+  return tabs+(it.length?`<div class="card"><div class="wrap"><table><tr><th>Item</th><th>Qty</th><th>Amount</th><th></th></tr>${it.map(i=>`<tr><td>${esc(i.p.name)}</td><td>${i.q} × ${esc(i.p.unit)}</td><td>${inr(i.p.price*i.q)}</td><td><button class="alt" onclick="delete cart[${i.p.id}];render()">Remove</button></td></tr>`).join('')}</table></div><h3 style="margin:1rem 0">Total ${inr(tot)}</h3><label>Delivery address</label><textarea id="addr" rows="3" placeholder="Village / street, city, pincode"></textarea><br><br><button onclick="place()">Place order</button></div>`:`<div class="card">Your cart is empty. Pick something from the shop.</div>`)}
+ return tabs+(my.length?my.map(orderCard).join(''):`<div class="card">No orders yet.</div>`)}
+function addCart(id){const p=P.find(x=>x.id===id),q=Math.max(1,parseInt($('#q'+id).value)||1);cart[id]=Math.min(p.stock,(cart[id]||0)+q);toast('Added to cart');render()}
+async function place(){await api('/orders','POST',{address:$('#addr').value,items:Object.entries(cart).map(([productId,qty])=>({productId:+productId,qty}))});cart={};tab='orders';toast('Order placed');await load()}
+function orderCard(o){const k=STEPS.indexOf(o.status),t=TR[o.id];
+ return `<div class="card" style="margin-bottom:14px"><div class="row"><h3 class="sp">Order #${o.id}</h3><span class="pill ${o.status}">${o.status}</span></div>
+ ${o.status==='Cancelled'?'':`<div class="steps">${STEPS.map((s,i)=>`<span class="${i<=k?'d':''}" title="${s}"></span>`).join('')}</div>`}
+ <div style="color:var(--mute);font-size:.9rem">${o.items.map(i=>`${esc(i.name)} × ${i.qty}`).join(', ')} · ${inr(o.total)}<br>Deliver to: ${esc(o.address)}${o.partner?`<br>Delivery partner: ${esc(o.partner.name)} (${esc(o.partner.phone)})`:''}</div>
+ ${o.status==='Out for delivery'?`<div style="margin-top:.8rem"><b>${t&&t.location?'🟢 Live location '+ago(t.location.at):'Waiting for the partner’s location…'}</b>${t?mapf(t.location,200):''}</div>`:''}
+ ${o.otp&&!['Delivered','Cancelled'].includes(o.status)?`<div style="margin-top:.9rem">Delivery OTP <span class="otp">${o.otp}</span><div style="font-size:.82rem;color:var(--mute);margin-top:.3rem">Share this only with the delivery partner when your order arrives.</div></div>`:''}</div>`}
+/* partner */
+function startW(){if(wid!==null||!navigator.geolocation)return;
+ wid=navigator.geolocation.watchPosition(p=>{const n=Date.now();if(n-lastPing<5000)return;lastPing=n;
+  api('/partner/location','POST',{lat:p.coords.latitude,lng:p.coords.longitude,accuracy:p.coords.accuracy}).then(()=>{const e=$('#lastloc');if(e)e.textContent='Live · sharing now'}).catch(()=>{})},
+  ()=>{wid=null;toast('Allow location access in your browser to share live location')},{enableHighAccuracy:true,maximumAge:5000})}
+function stopW(){if(wid!==null){navigator.geolocation.clearWatch(wid);wid=null}}
+async function duty(){if(me.duty){stopW();await api('/partner/duty','PATCH',{duty:false});me.duty=false;toast('You are off duty')}
+ else{if(!navigator.geolocation)return toast('Location is not available on this device');await api('/partner/duty','PATCH',{duty:true});me.duty=true;startW();toast('On duty. Sharing live location')}render()}
+function partnerView(){const act=O.filter(o=>!['Delivered','Cancelled'].includes(o.status)),dn=O.filter(o=>o.status==='Delivered');
+ if(!['jobs','done','me'].includes(tab))tab='jobs';
+ const T=[['jobs','Deliveries'],['done','Completed'],['me','My duty']].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';render()">${l}</button>`).join('');
+ const bar=`<div class="dbar"><div><small>${me.duty?'On duty':'Off duty'}</small><b>${esc(me.name)}</b></div><div><b>${act.length}</b><small>active</small></div><div><b>${dn.length}</b><small>done</small></div><div><b>${inr(dn.reduce((a,o)=>a+o.total,0))}</b><small>collected</small></div></div><div class="tabs dtabs">${T}</div>`;
+ if(tab==='me')return bar+`<div class="card"><h3>Duty status</h3><p style="color:var(--mute)">While you are on duty your phone sends your live location to the admin and to customers whose order you are delivering.</p><button onclick="duty()">${me.duty?'Go off duty':'Go on duty and share location'}</button><p id="lastloc" style="color:var(--mute);font-size:.9rem">${me.duty?'Live · sharing now':'Not sharing'}</p></div>`;
+ if(tab==='done')return bar+(dn.length?dn.map(o=>`<div class="card" style="margin-bottom:12px"><div class="row"><b class="sp">Order #${o.id}</b><span class="pill Delivered">Delivered</span></div><div style="color:var(--mute);font-size:.9rem">${esc(o.customer)} · ${inr(o.total)}<br>${esc(o.address)}</div></div>`).join(''):`<div class="card">No completed deliveries yet.</div>`);
+ return bar+(act.length?act.map(o=>{const pk=o.status==='Packed'||o.status==='Out for delivery';return `<div class="card" style="margin-bottom:14px"><div class="row"><h3 class="sp">Order #${o.id}</h3><span class="pill ${o.status}">${o.status}</span></div>
+ <div class="steps"><span class="d"></span><span class="${pk?'d':''}"></span><span class="${o.status==='Out for delivery'?'d':''}"></span><span></span></div><div class="dstep"><span>Assigned</span><span>Packed</span><span>On the way</span><span>Delivered</span></div>
+ <p style="margin:.8rem 0"><b>${esc(o.customer)}</b><br>${esc(o.address)}<br>${o.items.map(i=>`${esc(i.name)} × ${i.qty}`).join(', ')} · Collect <b>${inr(o.total)}</b></p>
+ <div class="row"><a class="btn" href="tel:${esc(o.phone)}">Call customer</a><a class="btn" target="_blank" rel="noopener" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(o.address)}">Open map</a></div><br>
+ ${o.status==='Packed'?`<button class="big" onclick="pst(${o.id},'start')">Start delivery</button>`:o.status==='Out for delivery'?`<input id="o${o.id}" inputmode="numeric" maxlength="4" placeholder="Customer’s 4-digit OTP" style="margin-bottom:10px"><button class="big" onclick="verify(${o.id})">Verify OTP and deliver</button>`:`<span class="pill">Waiting for admin to pack this order</span>`}</div>`}).join(''):`<div class="card">No active deliveries. The admin will assign orders to you.</div>`)}
+async function pst(id,a){await api(`/partner/orders/${id}/${a}`,'POST');if(!me.duty)toast('Tip: go on duty so customers can see you');await load()}
+async function verify(id){try{await api(`/partner/orders/${id}/deliver`,'POST',{otp:$('#o'+id).value});toast('OTP verified. Order delivered');await load()}catch(e){toast(e.message+(e.data&&e.data.attemptsLeft!==undefined?` (${e.data.attemptsLeft} tries left)`:''))}}
+/* admin */
+function adminView(){const pend=ST.pendingApprovals||0;
+ const tabs=`<div class="tabs">${[['overview','Overview'],['users','Approvals'+(pend?' ('+pend+')':'')],['products','Products & prices'],['orders','Orders & tracking'],['partners','Delivery tracking']].map(([k,l])=>`<button class="${tab===k?'on':''}" onclick="tab='${k}';load()">${l}</button>`).join('')}</div>`;
+ if(tab==='overview')return `<div class="hero"><h2>Admin control room</h2><p>Approve users, price products and track every delivery.</p>${HC}</div>`+tabs+`<div class="stats"><div class="card"><b>${ST.orders}</b>Orders</div><div class="card"><b>${ST.inProgress}</b>In progress</div><div class="card"><b>${ST.delivered}</b>Delivered</div><div class="card"><b>${inr(ST.deliveredValue||0)}</b>Delivered value</div><div class="card"><b>${pend}</b>Awaiting approval</div></div>`;
+ if(tab==='users')return tabs+`<div class="row" style="margin-bottom:12px"><span class="sp" style="color:var(--mute)">${U.length} registered users</span><button class="bad" id="clr" onclick="clearAll()">Clear all</button></div><div class="card wrap"><table><tr><th>Name</th><th>Role</th><th>Mobile</th><th>Status</th><th>Action</th></tr>${U.map(u=>`<tr><td>${esc(u.name)}</td><td>${ROLES[u.role]}</td><td>${esc(u.phone)}</td><td><span class="pill ${u.status}">${u.status}</span></td><td class="row"><button onclick="ust('${u.id}','approved')">Approve</button><button class="bad" onclick="ust('${u.id}','rejected')">Reject</button><button class="alt" onclick="delUser('${u.id}')">Delete</button></td></tr>`).join('')||'<tr><td colspan="5">No registrations yet.</td></tr>'}</table></div>`;
+ if(tab==='products')return tabs+`<div class="card" style="margin-bottom:16px"><h3>Add product</h3><div class="row" style="margin-top:.6rem"><input id="np" placeholder="Name" style="width:180px"><select id="nc" style="width:140px"><option>Grain</option><option>Fertilizer</option><option>Pesticide</option><option>Other</option></select><input id="npr" type="number" placeholder="Price ₹" style="width:110px"><input id="nu" placeholder="Unit (e.g. quintal)" style="width:150px"><input id="ns" type="number" placeholder="Stock" style="width:100px"><button onclick="addProd()">Add product</button></div></div><div class="card wrap"><table><tr><th>Product</th><th>Price (₹)</th><th>Stock</th><th></th></tr>${P.map(p=>`<tr><td>${em(p)} ${esc(p.name)}<br><small style="color:var(--mute)">${p.cat} · per ${esc(p.unit)}</small></td><td><input type="number" id="pp${p.id}" value="${p.price}" style="width:110px"></td><td><input type="number" id="ps${p.id}" value="${p.stock}" style="width:100px"></td><td class="row"><button onclick="updProd(${p.id})">Save</button><button class="bad" onclick="delProd(${p.id})">Delete</button></td></tr>`).join('')}</table></div>`;
+ if(tab==='partners')return tabs+(PT.length?`<div class="grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr))">${PT.map(p=>{const l=p.location,live=l&&Date.now()-l.at<30000;return `<div class="card"><div class="row"><h3 class="sp">${esc(p.name)}</h3><span class="pill ${p.duty?'approved':''}">${p.duty?'On duty':'Off duty'}</span></div><div style="color:var(--mute);font-size:.9rem;margin-top:.4rem">${esc(p.phone)} · ${p.activeOrders.length} active<br>${l?(live?'🟢 Live now':'Last seen '+ago(l.at))+` · <a href="https://www.google.com/maps?q=${l.lat},${l.lng}" target="_blank" rel="noopener">Open in Google Maps</a>`:'Location not shared yet'}</div>${mapf(l)}
+  ${p.activeOrders.map(o=>{const k=STEPS.indexOf(o.status);return `<div style="margin-top:.9rem"><b>#${o.id}</b> · ${esc(o.customer)} · <span class="pill ${o.status}">${o.status}</span><div class="steps">${STEPS.map((s,i)=>`<span class="${i<=k?'d':''}"></span>`).join('')}</div><div style="font-size:.82rem;color:var(--mute)">${esc(o.address)}</div></div>`}).join('')||'<p style="color:var(--mute);margin:.8rem 0 0">No active deliveries.</p>'}</div>`}).join('')}</div>`:`<div class="card">No approved delivery partners yet. Approve one in the Approvals tab.</div>`);
+ return tabs+(O.length?O.map(o=>`<div class="card" style="margin-bottom:14px"><div class="row"><h3 class="sp">Order #${o.id} · ${esc(o.customer)}</h3><span class="pill ${o.status}">${o.status}</span></div><p style="color:var(--mute);margin:.5rem 0">${o.items.map(i=>`${esc(i.name)} × ${i.qty}`).join(', ')} · ${inr(o.total)}<br>${esc(o.address)} · ${esc(o.phone)}${o.partner?`<br>Partner: ${esc(o.partner.name)}`:''}</p>
+ ${o.status==='Delivered'||o.status==='Cancelled'?'':o.status==='Out for delivery'?`<div class="row"><span class="pill">On the way. The partner finishes it with the customer’s OTP.</span>${o.otpLocked?`<button class="bad" onclick="resetOtp(${o.id})">Reset locked OTP</button>`:''}</div>`:`<div class="row"><select id="st${o.id}" style="width:150px">${['Placed','Confirmed','Packed','Cancelled'].map(s=>`<option ${s===o.status?'selected':''}>${s}</option>`).join('')}</select><select id="pt${o.id}" style="width:200px"><option value="">Assign partner…</option>${PT.map(p=>`<option value="${p.id}">${esc(p.name)}</option>`).join('')}</select><button onclick="updOrd(${o.id})">Update</button></div>`}</div>`).join(''):`<div class="card">No orders yet.</div>`)}
+let armed=0;
+async function delUser(id){await api('/admin/users/'+id,'DELETE');toast('User deleted');await load()}
+async function clearAll(){const b=$('#clr');if(!armed){armed=1;b.textContent='Click again to delete all users';setTimeout(()=>{armed=0;const c=$('#clr');if(c)c.textContent='Clear all'},4000);return}armed=0;await api('/admin/users','DELETE');toast('All users cleared');await load()}
+async function ust(id,s){await api(`/admin/users/${id}/status`,'PATCH',{status:s});toast('User '+s);await load()}
+async function addProd(){await api('/admin/products','POST',{name:$('#np').value,cat:$('#nc').value,price:$('#npr').value,unit:$('#nu').value,stock:$('#ns').value||0});toast('Product added');await load()}
+async function updProd(id){await api('/admin/products/'+id,'PATCH',{price:$('#pp'+id).value,stock:$('#ps'+id).value});toast('Saved')}
+async function delProd(id){await api('/admin/products/'+id,'DELETE');toast('Product deleted');await load()}
+async function updOrd(id){const p=$('#pt'+id).value;await api('/admin/orders/'+id,'PATCH',{status:$('#st'+id).value,partnerId:p||undefined});toast('Order updated');await load()}
+async function resetOtp(id){await api(`/admin/orders/${id}/reset-otp`,'POST');toast('New OTP sent to the customer');await load()}
+/* live refresh every 5 s */
+async function poll(){if(!me||me.status!=='approved'||document.hidden)return;
+ if(me.role==='admin'&&tab==='users'){const r=(await api('/admin/users')).users;if(JSON.stringify(r)!==sig){sig=JSON.stringify(r);U=r;render()}}
+ else if(me.role==='admin'&&tab==='partners'){const r=(await api('/admin/partners')).partners;if(JSON.stringify(r)!==sig){sig=JSON.stringify(r);PT=r;render()}}
+ else if((me.role==='farmer'||me.role==='trader')&&tab==='orders'){const o=(await api('/orders')).orders,t={};
+  for(const x of o.filter(x=>x.status==='Out for delivery'))try{t[x.id]=await api(`/orders/${x.id}/track`)}catch(e){}
+  const s=JSON.stringify([o,t]);if(s!==sig){sig=s;O=o;TR=t;render()}}}
+setInterval(()=>poll().catch(()=>{}),5000);
+(async()=>{if(tok){try{me=(await api('/me')).user;tab=me.role==='partner'?'jobs':me.role==='admin'?'overview':'shop';await load();return}catch(e){if(e.status===401){tok='';try{localStorage.removeItem('jbt')}catch(x){}}else{msg=e.message;ok=false}}}render()})();
+</script></body></html>
