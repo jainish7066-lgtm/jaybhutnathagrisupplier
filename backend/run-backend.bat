@@ -25,5 +25,6 @@ if not exist node_modules (
 echo.
 echo Starting backend at http://localhost:3000  (keep this window open, press Ctrl+C to stop)
 echo.
+start "" cmd /c "timeout /t 3 >nul & start http://localhost:3000"
 node server.js
 pause

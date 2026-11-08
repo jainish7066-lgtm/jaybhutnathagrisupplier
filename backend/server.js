@@ -12,7 +12,14 @@ if (!process.env.JWT_SECRET) console.warn('WARNING: JWT_SECRET not set. Logins r
 if (!process.env.ADMIN_PASS) console.warn('WARNING: using the default admin password. Set ADMIN_PASS in .env.');
 
 /* ---------- storage (atomic JSON file) ---------- */
-const FILE = process.env.DATA_FILE || path.join(__dirname, 'data.json');
+const FILE = process.env.DATA_FILE || (process.env.VERCEL ? '/tmp/data.json' : path.join(__dirname, 'data.json'));
+// Serverless hosts (Vercel) cannot keep files, so data goes to Upstash Redis / Vercel KV when these variables are set.
+const R_URL = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL, R_TOK = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+const REMOTE = !!(R_URL && R_TOK), rHead = { Authorization: 'Bearer ' + R_TOK };
+const rGet = async () => { const r = await fetch(R_URL + '/get/jbas_db', { headers: rHead }); const j = await r.json(); if (!r.ok) throw new Error('db read'); return j.result ? JSON.parse(j.result) : null; };
+const rSet = async () => { const r = await fetch(R_URL + '/set/jbas_db', { method: 'POST', headers: rHead, body: JSON.stringify(db) }); if (!r.ok) throw new Error('db save'); };
+let saves = 0;
+if (process.env.VERCEL && !REMOTE) console.warn('WARNING: on Vercel you must connect Upstash Redis (Storage tab), or users and orders will disappear.');
 const SEED = [
   ['Sharbati Wheat', 'Grain', 2850, 'quintal', 400], ['Castor Seed', 'Grain', 6300, 'quintal', 250],
   ['Bajra (Pearl Millet)', 'Grain', 2450, 'quintal', 300], ['Urea', 'Fertilizer', 270, '45 kg bag', 900],
@@ -22,7 +29,7 @@ const SEED = [
 let db;
 try { db = JSON.parse(fs.readFileSync(FILE, 'utf8')); }
 catch { db = { users: [], products: SEED, orders: [], seq: 1000, pid: SEED.length }; }
-const save = () => { const t = FILE + '.tmp'; fs.writeFileSync(t, JSON.stringify(db)); fs.renameSync(t, FILE); };
+const save = () => { saves++; if (REMOTE) return; const t = FILE + '.tmp'; fs.writeFileSync(t, JSON.stringify(db)); fs.renameSync(t, FILE); };
 
 /* ---------- helpers ---------- */
 const digest = s => crypto.createHash('sha256').update(String(s)).digest();
@@ -66,14 +73,28 @@ function auth(roles = [], allowPending = false) {
 
 /* ---------- app ---------- */
 const app = express();
-app.use(helmet({ contentSecurityPolicy: { useDefaults: false, directives: {   // allows the bundled website, Google Fonts and the OpenStreetMap live map
+app.set('trust proxy', 1);
+app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' }, contentSecurityPolicy: { useDefaults: false, directives: {   // allows the bundled website, Google Fonts and the OpenStreetMap live map
   defaultSrc: ["'self'"], scriptSrc: ["'self'", "'unsafe-inline'"], scriptSrcAttr: ["'unsafe-inline'"],
   styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'], fontSrc: ['https://fonts.gstatic.com'],
   imgSrc: ["'self'", 'data:'], frameSrc: ['https://www.openstreetmap.org'], connectSrc: ["'self'"] } } }));
-app.use(cors({ origin: process.env.CORS_ORIGIN || false }));
+// CORS_ORIGIN: comma-separated website addresses allowed to call this API, e.g. https://myshop.netlify.app,https://www.myshop.in
+// (no trailing slash needed). Use * to allow any site. Not needed when the website is served by this same server.
+const ORIGINS = (process.env.CORS_ORIGIN || '').split(',').map(x => x.trim().replace(/\/+$/, '')).filter(Boolean);
+console.log('CORS allowed origins: ' + (ORIGINS.length ? ORIGINS.join(', ') : 'any website (set CORS_ORIGIN to restrict)'));
+app.use(cors({ origin: (origin, cb) => cb(null, !origin || !ORIGINS.length || ORIGINS.includes('*') || ORIGINS.includes(origin.replace(/\/+$/, ''))),
+  methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'], allowedHeaders: ['Content-Type', 'Authorization'], maxAge: 86400 }));
+app.get('/api/health', (req, res) => res.json({ ok: true }));
 app.use(express.json({ limit: '50kb' }));
 app.use('/api/auth', rateLimit({ windowMs: 15 * 60 * 1000, limit: 30, standardHeaders: true, legacyHeaders: false }));
 
+app.use('/api', async (req, res, next) => {            // serverless: load the shared database for every request, save before replying
+  if (!REMOTE) return next();
+  try { const d = await rGet(); if (d) db = d; } catch { return err(res, 503, 'Database unavailable. Check the Upstash variables.'); }
+  const s0 = saves, json = res.json.bind(res);
+  res.json = body => { if (saves === s0) return json(body); rSet().then(() => json(body)).catch(() => { res.status(500); json({ error: 'Could not save your change. Try again.' }); }); return res; };
+  next();
+});
 app.post('/api/auth/register', wrap((req, res) => {
   const { role, name, phone, password } = req.body || {};
   if (!ROLES.includes(role)) return err(res, 400, 'Choose farmer, trader or partner');
@@ -133,6 +154,13 @@ app.patch('/api/admin/users/:id/status', auth(['admin']), wrap((req, res) => {
   if (!['approved', 'rejected', 'pending'].includes(req.body?.status)) return err(res, 400, 'Invalid status');
   u.status = req.body.status; save(); res.json({ user: publicUser(u) });
 }));
+// Delete one user, or clear all users. Active orders of a deleted partner go back to "Confirmed" so they can be reassigned.
+const dropUser = id => db.orders.forEach(o => { if (o.partnerId === id && !['Delivered', 'Cancelled'].includes(o.status)) { o.partnerId = null; if (['Packed', 'Out for delivery'].includes(o.status)) o.status = 'Confirmed'; } });
+app.delete('/api/admin/users/:id', auth(['admin']), wrap((req, res) => {
+  const u = db.users.find(x => x.id === req.params.id); if (!u) return err(res, 404, 'User not found');
+  dropUser(u.id); db.users = db.users.filter(x => x !== u); save(); res.json({ ok: true });
+}));
+app.delete('/api/admin/users', auth(['admin']), wrap((req, res) => { db.users.forEach(u => dropUser(u.id)); db.users = []; save(); res.json({ ok: true }); }));
 app.get('/api/admin/orders', auth(['admin']), (req, res) => res.json({ orders: [...db.orders].reverse().map(o => orderView(o, req.user)) }));
 app.patch('/api/admin/orders/:id', auth(['admin']), wrap((req, res) => {
   const o = db.orders.find(x => x.id === +req.params.id); if (!o) return err(res, 404, 'Order not found');
@@ -231,9 +259,15 @@ app.get('/api/orders/:id/track', auth(['farmer', 'trader']), wrap((req, res) => 
 }));
 
 /* ---------- static frontend (optional) + errors ---------- */
-const PUB = path.join(__dirname, 'public');
-if (fs.existsSync(PUB)) app.use(express.static(PUB));
+// Serves the website: public/index.html (preferred) or index.html next to server.js.
+const SITE = [path.join(__dirname, 'public', 'index.html'), path.join(__dirname, 'index.html')].find(f => fs.existsSync(f));
+if (SITE) { console.log('Website file found: ' + SITE); app.get('/', (req, res) => res.sendFile(SITE)); }
+else {
+  console.warn('WARNING: index.html not found. Put it in a folder named "public" next to server.js.');
+  app.get('/', (req, res) => res.status(404).send('<h2>Website file not found</h2><p>Put <b>index.html</b> inside a folder named <b>public</b>, next to server.js, then restart the backend.</p>'));
+}
 app.use('/api', (req, res) => err(res, 404, 'Not found'));
 app.use((e, req, res, next) => err(res, e.type === 'entity.parse.failed' ? 400 : 500, e.type === 'entity.parse.failed' ? 'Invalid JSON' : 'Something went wrong'));
 
-app.listen(PORT, () => console.log(`Jay Bhutnath Agri API running on http://localhost:${PORT}`));
+if (require.main === module) app.listen(PORT, () => console.log(`Jay Bhutnath Agri API running on http://localhost:${PORT}`));
+module.exports = app;   // Vercel runs the app as a serverless function
